@@ -1,0 +1,15 @@
+# Switch off the annoying bells
+vbell off
+bell_msg ""
+vbell_msg ""
+
+# Scroll
+defscrollback 30000
+defshell /bin/bash
+
+# Bind F7 and F8 for previous and next window respectively.
+bindkey -k k7 prev
+bindkey -k k8 next
+
+# Set the status line
+hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A %D, %d/%M/%Y "
