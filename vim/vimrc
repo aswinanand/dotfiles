@@ -1,0 +1,166 @@
+if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
+   set fileencodings=utf-8,latin1
+endif
+
+set nocompatible
+set bs=indent,eol,start
+syn on
+set hlsearch
+set incsearch
+set ic
+set sts=4
+set shiftwidth=4
+set expandtab
+set autoindent
+set nowrap
+set undofile
+set undodir=~/.vimundodir
+set ruler
+let mapleader = ","
+set tabpagemax=50
+set tw=0
+set termencoding=utf-8
+set encoding=utf-8
+set switchbuf+=usetab,newtab
+
+execute pathogen#infect()
+
+" Open a new file from the current file's directory by pressing '-'
+nnoremap - <esc>:execute "tabnew " expand('%:p:h') <cr>
+
+filetype plugin indent on
+
+if &term=="xterm" || &term=="xterm-256color"
+    set t_Co=8
+    set t_Sb=^[[4%dm
+    set t_Sf=^[[3%dm
+endif
+
+if (has("gui_running"))
+    set guifont=Menlo\ Regular:h15
+    if (!exists("do_syntax_sel_menu"))
+        let do_syntax_sel_menu = 1|runtime! synmenu.vim|aunmenu &Syntax.&Show\ filetypes\ in\ menu
+    endif
+    set linespace=2
+    colorscheme desert
+endif
+
+" remap H and L to go to bol and eol
+nnoremap H ^
+nnoremap L $
+
+" Turn on 'very magic' by default. More info ':help magic'
+nnoremap / /\v
+
+" Highlight white-space at EOL
+nnoremap <leader>w :match Error /\v(\s)+$/<cr>
+nnoremap <leader>W :match none<cr>
+
+" Remove white-space at EOL
+nnoremap <leader>R :%s:\v(\s)+$::g<cr>
+
+" open and source vimrc
+nnoremap <leader>ev :rightbelow vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>:noh<cr>:echo "Sourced " . expand('$MYVIMRC')<cr>
+
+" Use + and = to move lines up/down respectively
+nnoremap + ddkP
+nnoremap = ddp
+
+" Use F3 and F4 keys to move between tabs
+vnoremap <F3> <ESC>:tabprevious<CR>
+vnoremap <F4> <ESC>:tabnext<CR>
+nnoremap <F3> :tabprevious<CR>
+nnoremap <F4> :tabnext<CR>
+inoremap <F3> <ESC>:tabprevious<CR>i
+inoremap <F4> <ESC>:tabnext<CR>i
+
+"nnoremap <F9> :source %<cr>
+
+" Comment lines by pressing F5
+nnoremap <F5> :Commentary<cr>
+inoremap <F5> <esc>:Commentary<cr>i
+vnoremap <F5> :Commentary<cr>
+
+" Uncomment lines by pressing F6
+nnoremap <F6> :Uncommentary<cr>
+inoremap <F6> <esc>:Uncommentary<cr>i
+vnoremap <F6> :Uncommentary<cr>
+
+let php_folding = 1
+let php_sql_query = 1
+let php_htmlInStrings = 1
+
+aug ftgroup
+   au!
+
+   " Enable javascript syntax highlighting for JSON files
+   au BufNewFile,BufRead *.json setf javascript
+
+  " Open PHP folds by default
+  au Syntax php normal zR
+
+aug END
+
+" Use C-j and C-k to insert empty lines below and above respectively
+nnoremap <silent><C-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
+
+" Step through wrapped lines while 'set wrap'
+nnoremap j gj
+nnoremap k gk
+
+" Open a new file from the current file's directory by pressing '-'
+cabbr <expr> %% expand('%:p:h')
+nnoremap - :tabnew %% <CR>
+
+" Move current tab into the specified direction.
+" @param direction -1 for left, 1 for right.
+" http://stackoverflow.com/questions/7961581/is-there-a-vim-command-to-relocate-a-tab/7961618#7961618
+function! s:TabMove(direction)
+    " get number of tab pages.
+    let ntp=tabpagenr("$")
+    " move tab, if necessary.
+    if ntp > 1
+        " get number of current tab page.
+        let ctpn=tabpagenr()
+        " move left.
+        if a:direction < 0
+            let index=((ctpn-1+ntp-1)%ntp)
+        else
+            let index=(ctpn%ntp)
+        endif
+
+        " move tab page.
+        execute "tabmove ".index
+    endif
+endfunction
+
+nnoremap <F1> :call <SID>TabMove(-1)<CR>
+nnoremap <F2> :call <SID>TabMove(1)<CR>
+
+" Go to the last edited line when reopening a file
+aug gotolastedit
+  au!
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+aug END
+
+let MRU_Open_File_Use_Tabs = 1
+nnoremap <leader>r <ESC>:MRU<CR>
+
+" Detect indent plugin prefs
+let g:detectindent_preferred_expandtab = 1
+let g:detectindent_preferred_indent = 4
+aug di
+   au!
+   au BufReadPost * :DetectIndent
+aug END
+
+" Sideways.vim plugin maps for moving method arguments
+onoremap aa <Plug>SidewaysArgumentTextobjA
+xnoremap aa <Plug>SidewaysArgumentTextobjA
+onoremap ia <Plug>SidewaysArgumentTextobjI
+xnoremap ia <Plug>SidewaysArgumentTextobjI
