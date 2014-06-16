@@ -110,10 +110,6 @@ nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 nnoremap j gj
 nnoremap k gk
 
-" Open a new file from the current file's directory by pressing '-'
-cabbr <expr> %% expand('%:p:h')
-nnoremap - :tabnew %% <CR>
-
 " Move current tab into the specified direction.
 " @param direction -1 for left, 1 for right.
 " http://stackoverflow.com/questions/7961581/is-there-a-vim-command-to-relocate-a-tab/7961618#7961618
