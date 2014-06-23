@@ -162,7 +162,7 @@ onoremap ia <Plug>SidewaysArgumentTextobjI
 xnoremap ia <Plug>SidewaysArgumentTextobjI
 
 " From the current line, identify which class and function it is
-" a part of & echo those lines.
+" a part of & echo those lines. Supports only PHP.
 function! s:GetClassAndFunction()
   let ln = line('.')
 
