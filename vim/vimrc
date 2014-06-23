@@ -160,3 +160,38 @@ onoremap aa <Plug>SidewaysArgumentTextobjA
 xnoremap aa <Plug>SidewaysArgumentTextobjA
 onoremap ia <Plug>SidewaysArgumentTextobjI
 xnoremap ia <Plug>SidewaysArgumentTextobjI
+
+" From the current line, identify which 
+function! s:GetClassAndFunction()
+  let ln = line('.')
+
+  " Set a mark on the current line
+  silent! execute "normal! mZ"
+
+  " Search for 'class' keyword & save its line number
+  silent! execute '?\v^class [A-Za-z0-9_]+ '
+  let cl = line('.')
+
+  " Return to the previous mark
+  silent! execute "normal! `Z"
+
+  silent! execute "normal! mZ"
+  silent! execute '?\v^(\s*)(public|private)\?(\s+)function(\s+)'
+  let fl = line('.')
+  silent! execute "normal! `Z"
+
+  let cls = 'class not found'
+  let fun = 'function not found'
+
+  " Print the class & fn name
+  if (cl < ln)
+      let cls = substitute(getline(cl), '\v^(\s+)|(\s+)$', '', 'g')
+  endif
+  if (fl < ln)
+      let fun = substitute(getline(fl), '\v^(\s+)|(\s+)$', '', 'g')
+  endif
+
+  echo cls . ' ; ' . fun
+endfunction
+
+nnoremap <leader>f :call <sid>GetClassAndFunction()<cr>
