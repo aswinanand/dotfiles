@@ -161,7 +161,8 @@ xnoremap aa <Plug>SidewaysArgumentTextobjA
 onoremap ia <Plug>SidewaysArgumentTextobjI
 xnoremap ia <Plug>SidewaysArgumentTextobjI
 
-" From the current line, identify which 
+" From the current line, identify which class and function it is
+" a part of & echo those lines.
 function! s:GetClassAndFunction()
   let ln = line('.')
 
@@ -176,7 +177,7 @@ function! s:GetClassAndFunction()
   silent! execute "normal! `Z"
 
   silent! execute "normal! mZ"
-  silent! execute '?\v^(\s*)(public|private)\?(\s+)function(\s+)'
+  silent! execute '?\v^(\s*)(public|private|protected)\?(\s+)function(\s+)'
   let fl = line('.')
   silent! execute "normal! `Z"
 
