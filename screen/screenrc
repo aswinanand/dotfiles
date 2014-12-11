@@ -13,3 +13,5 @@ bindkey -k k8 next
 
 # Set the status line
 hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A %D, %d/%M/%Y "
+
+term xterm
