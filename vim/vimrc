@@ -9,6 +9,7 @@ set hlsearch
 set incsearch
 set ic
 set sts=4
+set ts=4
 set shiftwidth=4
 set expandtab
 set autoindent
@@ -22,6 +23,7 @@ set tw=0
 set termencoding=utf-8
 set encoding=utf-8
 set switchbuf+=usetab,newtab
+set listchars=tab:>-,trail:~,extends:>,precedes:<
 
 execute pathogen#infect()
 
@@ -30,8 +32,8 @@ nnoremap - <esc>:execute "tabnew " expand('%:p:h') <cr>
 
 filetype plugin indent on
 
-if &term=="xterm" || &term=="xterm-256color"
-    set t_Co=8
+if &term=="xterm" || &term=="xterm-256color" || &term=="screen"
+    set t_Co=16
     set t_Sb=^[[4%dm
     set t_Sf=^[[3%dm
 endif
@@ -50,11 +52,18 @@ nnoremap H ^
 nnoremap L $
 
 " Turn on 'very magic' by default. More info ':help magic'
-nnoremap / /\v
+"nnoremap / /\v
 
 " Highlight white-space at EOL
 nnoremap <leader>w :match Error /\v(\s)+$/<cr>
 nnoremap <leader>W :match none<cr>
+
+" Show tabs and spaces
+nnoremap <leader>t :set list<cr>
+nnoremap <leader>T :set nolist<cr>
+if &diff
+  set list
+endif
 
 " Remove white-space at EOL
 nnoremap <leader>R :%s:\v(\s)+$::g<cr>
@@ -66,6 +75,27 @@ nnoremap <leader>sv :source $MYVIMRC<cr>:noh<cr>:echo "Sourced " . expand('$MYVI
 " Use + and = to move lines up/down respectively
 nnoremap + ddkP
 nnoremap = ddp
+
+" Shortcut for git diff
+function! s:gitDiff()
+    execute "tabnew"
+    execute "r! git diff"
+    call feedkeys("ggdd")
+    execute "setf diff"
+endfunction
+
+nnoremap <leader>d :call <SID>gitDiff()<cr>
+nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gd :Gvdiff<cr>
+nnoremap <leader>gc :Gcommit<cr>
+nnoremap <leader>gp :!git push<cr>
+
+" Change diff highlight colours to be a little pleasant
+" http://stackoverflow.com/a/17183382
+highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
 
 " Use F3 and F4 keys to move between tabs
 vnoremap <F3> <ESC>:tabprevious<CR>
@@ -96,6 +126,8 @@ aug ftgroup
 
    " Enable javascript syntax highlighting for JSON files
    au BufNewFile,BufRead *.json setf javascript
+
+   au BufNewFile,BufRead *.rabl setf ruby
 
   " Open PHP folds by default
   au Syntax php normal zR
@@ -161,38 +193,11 @@ xnoremap aa <Plug>SidewaysArgumentTextobjA
 onoremap ia <Plug>SidewaysArgumentTextobjI
 xnoremap ia <Plug>SidewaysArgumentTextobjI
 
-" From the current line, identify which class and function it is
-" a part of & echo those lines. Supports only PHP.
-function! s:GetClassAndFunction()
-  let ln = line('.')
+let g:ctrlp_open_new_file = 't'
+let g:ctrlp_open_multiple_files = 't'
+let g:ctrlp_tabpage_position = 'ac'
+let g:ctrlp_switch_buffer = 'Et'
+let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 
-  " Set a mark on the current line
-  silent! execute "normal! mZ"
-
-  " Search for 'class' keyword & save its line number
-  silent! execute '?\v^class [A-Za-z0-9_]+ '
-  let cl = line('.')
-
-  " Return to the previous mark
-  silent! execute "normal! `Z"
-
-  silent! execute "normal! mZ"
-  silent! execute '?\v^(\s*)(public|private|protected)\?(\s+)function(\s+)'
-  let fl = line('.')
-  silent! execute "normal! `Z"
-
-  let cls = 'class not found'
-  let fun = 'function not found'
-
-  " Print the class & fn name
-  if (cl < ln)
-      let cls = substitute(getline(cl), '\v^(\s+)|(\s+)$', '', 'g')
-  endif
-  if (fl < ln)
-      let fun = substitute(getline(fl), '\v^(\s+)|(\s+)$', '', 'g')
-  endif
-
-  echo cls . ' ; ' . fun
-endfunction
-
-nnoremap <leader>f :call <sid>GetClassAndFunction()<cr>
+let g:CommandTAcceptSelectionMap = '<C-t>'
+let g:CommandTAcceptSelectionTabMap = '<CR>'
