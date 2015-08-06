@@ -33,6 +33,7 @@ nnoremap - <esc>:execute "tabnew " expand('%:p:h') <cr>
 filetype plugin indent on
 
 if &term=="xterm" || &term=="xterm-256color" || &term=="screen"
+    " http://sunaku.github.io/vim-256color-bce.html
     set t_Co=16
     set t_Sb=^[[4%dm
     set t_Sf=^[[3%dm
