@@ -98,6 +98,12 @@ highlight DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Re
 highlight DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
 highlight DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
 
+" Visual mode highlight colours
+" http://stackoverflow.com/a/3076780
+highlight Visual ctermfg=black ctermbg=Gray
+highlight Search ctermfg=black ctermbg=Yellow
+highlight Folded ctermfg=10    ctermbg=17
+
 " Use F3 and F4 keys to move between tabs
 vnoremap <F3> <ESC>:tabprevious<CR>
 vnoremap <F4> <ESC>:tabnext<CR>
