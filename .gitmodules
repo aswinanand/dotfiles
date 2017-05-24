@@ -46,3 +46,6 @@
 [submodule "vim/bundle/Dockerfile.vim"]
 	path = vim/bundle/Dockerfile.vim
 	url = https://github.com/ekalinin/Dockerfile.vim.git
+[submodule "vim/bundle/PreserveNoEOL"]
+	path = vim/bundle/PreserveNoEOL
+	url = https://github.com/vim-scripts/PreserveNoEOL.git
