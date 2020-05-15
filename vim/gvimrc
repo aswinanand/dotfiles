@@ -1,0 +1,6 @@
+set guifont=Menlo\ Regular:h17
+if (!exists("do_syntax_sel_menu"))
+    let do_syntax_sel_menu = 1|runtime! synmenu.vim|aunmenu &Syntax.&Show\ filetypes\ in\ menu
+endif
+set linespace=2
+colorscheme desert

@@ -12,10 +12,11 @@ set sts=4
 set ts=4
 set shiftwidth=4
 set expandtab
-set autoindent
+"set autoindent
 set nowrap
 set undofile
 set undodir=~/.vimundodir
+set directory=~/.vimswapdir
 set ruler
 let mapleader = ","
 set tabpagemax=50
@@ -107,8 +108,8 @@ highlight Folded ctermfg=10    ctermbg=17
 " Use F3 and F4 keys to move between tabs
 vnoremap <F3> <ESC>:tabprevious<CR>
 vnoremap <F4> <ESC>:tabnext<CR>
-nnoremap <F3> :tabprevious<CR>
-nnoremap <F4> :tabnext<CR>
+nnoremap <F3> :tabprevious<CR><C-g>
+nnoremap <F4> :tabnext<CR><C-g>
 inoremap <F3> <ESC>:tabprevious<CR>i
 inoremap <F4> <ESC>:tabnext<CR>i
 
@@ -163,7 +164,7 @@ function! s:TabMove(direction)
         if a:direction < 0
             let index=((ctpn-1+ntp-1)%ntp)
         else
-            let index=(ctpn%ntp)
+            let index=(ctpn%ntp)+1
         endif
 
         " move tab page.
