@@ -1,0 +1,40 @@
+# set default editor to vim
+export EDITOR=vim
+
+# set umask properly for WSL
+if [[ $(grep Microsoft /proc/version) ]]; then
+    umask 0002
+fi
+
+# bash history options
+export HISTCONTROL=ignoreboth
+export HISTSIZE=999999
+export HISTFILESIZE=20000
+export HISTIGNORE="&:[ ]*:exit:reboot:sudo reboot:sudo init 6"
+
+shopt -s histappend
+
+# colour ls output
+alias ls='ls --color=auto'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+
+# colour grep output
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# other ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# open multiple files in tabs by default
+alias vim="vim -p"
+
+# git aliases
+alias gd="git diff -w"
+alias gb="git branch"
+alias gst="git status"
+alias gdc="git diff -w --cached"
+alias gsb="git rev-parse --abbrev-ref HEAD"
