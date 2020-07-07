@@ -1,0 +1,131 @@
+if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
+   set fileencodings=utf-8,latin1
+endif
+
+set nocompatible
+set bs=indent,eol,start
+syn on
+set hlsearch
+set incsearch
+set ic
+set sts=4
+set ts=4
+set shiftwidth=4
+set expandtab
+set autoindent
+set nowrap
+set undofile
+set undodir=~/.vimundodir
+set directory=~/.vimswapdir
+set ruler
+let mapleader = ","
+set tabpagemax=50
+set tw=0
+set termencoding=utf-8
+set encoding=utf-8
+set switchbuf+=usetab,newtab
+set listchars=tab:>-,trail:~,extends:>,precedes:<
+
+" Open a new file from the current file's directory by pressing '-'
+nnoremap - <esc>:execute "tabnew " expand('%:p:h') <cr>
+
+filetype plugin indent on
+
+if &term=="xterm" || &term=="xterm-256color" || &term=="screen"
+    " http://sunaku.github.io/vim-256color-bce.html
+    set t_Co=16
+    set t_Sb=^[[4%dm
+    set t_Sf=^[[3%dm
+endif
+
+" remap H and L to go to bol and eol
+nnoremap H ^
+nnoremap L $
+
+" Turn on 'very magic' by default. More info ':help magic'
+"nnoremap / /\v
+
+" Highlight white-space at EOL
+nnoremap <leader>w :match Error /\v(\s)+$/<cr>
+nnoremap <leader>W :match none<cr>
+
+" Show tabs and spaces
+nnoremap <leader>t :set list<cr>
+nnoremap <leader>T :set nolist<cr>
+if &diff
+  set list
+endif
+
+" Remove white-space at EOL
+nnoremap <leader>R :%s:\v(\s)+$::g<cr>
+
+" open and source vimrc
+nnoremap <leader>ev :rightbelow vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>:noh<cr>:echo "Sourced " . expand('$MYVIMRC')<cr>
+
+" Use + and = to move lines up/down respectively
+nnoremap + ddkP
+nnoremap = ddp
+
+" Change diff highlight colours to be a little pleasant
+" http://stackoverflow.com/a/17183382
+highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
+
+" Visual mode highlight colours
+" http://stackoverflow.com/a/3076780
+highlight Visual ctermfg=black ctermbg=Gray
+highlight Search ctermfg=black ctermbg=Yellow
+highlight Folded ctermfg=10    ctermbg=17
+
+" Use F3 and F4 keys to move between tabs
+vnoremap <F3> <ESC>:tabprevious<CR>
+vnoremap <F4> <ESC>:tabnext<CR>
+nnoremap <F3> :tabprevious<CR><C-g>
+nnoremap <F4> :tabnext<CR><C-g>
+inoremap <F3> <ESC>:tabprevious<CR>i
+inoremap <F4> <ESC>:tabnext<CR>i
+
+" Use C-j and C-k to insert empty lines below and above respectively
+nnoremap <silent><C-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
+
+" Step through wrapped lines while 'set wrap'
+nnoremap j gj
+nnoremap k gk
+
+" Move current tab into the specified direction.
+" @param direction -1 for left, 1 for right.
+" http://stackoverflow.com/questions/7961581/is-there-a-vim-command-to-relocate-a-tab/7961618#7961618
+function! s:TabMove(direction)
+    " get number of tab pages.
+    let ntp=tabpagenr("$")
+    " move tab, if necessary.
+    if ntp > 1
+        " get number of current tab page.
+        let ctpn=tabpagenr()
+        " move left.
+        if a:direction < 0
+            let index=((ctpn-1+ntp-1)%ntp)
+        else
+            let index=(ctpn%ntp)+1
+        endif
+
+        " move tab page.
+        execute "tabmove ".index
+    endif
+endfunction
+
+nnoremap <F1> :call <SID>TabMove(-1)<CR>
+nnoremap <F2> :call <SID>TabMove(1)<CR>
+
+" Go to the last edited line when reopening a file
+aug gotolastedit
+  au!
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+aug END
