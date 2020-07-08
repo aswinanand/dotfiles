@@ -4,6 +4,7 @@ export EDITOR=vim
 # set umask properly for WSL
 if [[ $(grep Microsoft /proc/version) ]]; then
     umask 0002
+    cd
 fi
 
 # bash history options
