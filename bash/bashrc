@@ -39,4 +39,6 @@ alias gb="git branch"
 alias gst="git status"
 alias gdc="git diff -w --cached"
 alias gsb="git rev-parse --abbrev-ref HEAD"
-alias gp="git push -u origin `gsb`"
+function gp {
+  git push -u origin `gsb`
+}
